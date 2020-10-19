@@ -1,18 +1,30 @@
 import yfinance as yf
 import json
 '''
-TODO    Currency exchanger so that stocks get valued in same currency in order 
-        not to lose or gain value.
+TODO    Expand Currency exchanger to support more than DKK to USD
 
 '''
+def dkkToUsd(dkk):
+    var = yf.Ticker("USDDKK=X").info["ask"]
+    usd = dkk/var
+    return usd
 
-
+def isDKK(cur):
+    if cur == "DKK":
+        return True
+    else:
+        return False
 
 def getQuote(name, amount):
     n = yf.Ticker(name)
     result = n.info["ask"]
+    if isDKK(n.info["currency"]) == True:
+        cur = "DKK"
+        result = dkkToUsd(result)
+    else:
+        cur = "USD"
     price = float(result)*float(amount)
-    print(str(amount) + " shares of " + name +  " costs " + str(price) + n.info["currency"])
+    print(str(amount) + " shares of " + name +  " costs $" + str(price))
 
 def getPrice(name, amount):
     n = yf.Ticker(name)
